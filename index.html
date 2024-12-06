@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Naveen's Tools and Tutorials</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0d0d0d;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .headline {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            animation: colorCycle 5s infinite;
+        }
+
+        @keyframes colorCycle {
+            0% { color: #00ff00; }
+            25% { color: #ff0000; }
+            50% { color: #0000ff; }
+            75% { color: #ff00ff; }
+            100% { color: #00ff00; }
+        }
+
+        select {
+            padding: 10px;
+            font-size: 1em;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .tool-info {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 250px;
+            border: none;
+            margin: 10px 0;
+        }
+
+        .download-btn {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: white;
+            background: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            animation: colorCycle9 3s infinite;
+        }
+
+        @keyframes colorCycle9 {
+            0% { background-color: #00ff00; }
+            11.11% { background-color: #ff0000; }
+            22.22% { background-color: #0000ff; }
+            33.33% { background-color: #ffff00; }
+            44.44% { background-color: #ff00ff; }
+            55.55% { background-color: #00ffff; }
+            66.66% { background-color: #ff9900; }
+            77.77% { background-color: #33cc33; }
+            88.88% { background-color: #ff6699; }
+            100% { background-color: #00ff00; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="headline">
+            Cyber Naveen's Tools and Tutorials
+        </div>
+
+        <div class="selection-section">
+            <h2>Select a Topic</h2>
+            <select id="topicSelector" onchange="showTools()">
+                <option value="">-- Select Topic --</option>
+                <option value="1">Networking</option>
+                <option value="2">Data Analysis</option>
+            </select>
+        </div>
+
+        <div id="tools-section" class="tools-section" style="display: none;">
+            <h2>Tools List</h2>
+            <select id="toolsSelector" onchange="showToolInfo()">
+                <option value="">-- Select a Tool --</option>
+            </select>
+        </div>
+
+        <div id="tool-info" class="tool-info" style="display: none;">
+            <h3 id="toolName"></h3>
+            <p id="toolDescription"></p>
+            <a id="toolLink" href="" target="_blank" style="color: #00ff00;">Learn More</a>
+            <br><br>
+            <iframe id="toolVideo" src="" allowfullscreen style="display: none;"></iframe>
+            <br><br>
+            <button id="downloadBtn" class="download-btn" onclick="startDownload()" style="display: none;">
+                Download Source Code
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const topics = [
+            {
+                id: 1,
+                name: "Networking",
+                tools: [
+                    {
+                        name: "Wireshark",
+                        description: "A network protocol analyzer.",
+                        link: "https://www.wireshark.org/",
+                        video: "",
+                        download: "network_tool1.zip"
+                    },
+                    {
+                        name: "Nmap",
+                        description: "A network scanning tool.",
+                        link: "https://nmap.org/",
+                        video: "https://www.youtube.com/embed/T5pRy3lcrqM",
+                        download: "network_tool2.zip"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "Data Analysis",
+                tools: [
+                    {
+                        name: "Pandas",
+                        description: "Data analysis library for Python.",
+                        link: "https://pandas.pydata.org/",
+                        video: "https://www.youtube.com/embed/wG3bWHZOcm4",
+                        download: "data_tool1.zip"
+                    },
+                    {
+                        name: "Tableau",
+                        description: "Interactive data visualization.",
+                        link: "https://www.tableau.com/",
+                        video: "https://www.youtube.com/embed/sF4QYnKb5Fk",
+                        download: "data_tool2.zip"
+                    }
+                ]
+            }
+        ];
+
+        let currentTopic;
+        let currentTool;
+
+        function showTools() {
+            const selector = document.getElementById("topicSelector");
+            const selectedValue = selector.value;
+            const toolsSection = document.getElementById("tools-section");
+            const toolsSelector = document.getElementById("toolsSelector");
+
+            if (!selectedValue) {
+                toolsSection.style.display = "none";
+                return;
+            }
+
+            currentTopic = topics.find(topic => topic.id === parseInt(selectedValue));
+
+            toolsSelector.innerHTML = '<option value="">-- Select a Tool --</option>';
+            currentTopic.tools.forEach((tool, index) => {
+                const option = document.createElement("option");
+                option.value = index;
+                option.textContent = tool.name;
+                toolsSelector.appendChild(option);
+            });
+            toolsSection.style.display = "block";
+        }
+
+        function showToolInfo() {
+            const selector = document.getElementById("toolsSelector");
+            const selectedValue = selector.value;
+            const toolInfo = document.getElementById("tool-info");
+            const toolVideo = document.getElementById("toolVideo");
+            const downloadBtn = document.getElementById("downloadBtn");
+
+            if (!selectedValue) {
+                toolInfo.style.display = "none";
+                return;
+            }
+
+            currentTool = currentTopic.tools[selectedValue];
+
+            document.getElementById("toolName").textContent = currentTool.name;
+            document.getElementById("toolDescription").textContent = currentTool.description;
+            document.getElementById("toolLink").href = currentTool.link;
+            toolVideo.src = currentTool.video;
+            toolVideo.style.display = "block";
+            toolInfo.style.display = "block";
+            downloadBtn.style.display = "inline-block";
+        }
+
+        function startDownload() {
+            const password = prompt("Enter the password to download:");
+
+            if (password === "cybernaveen") {
+                alert("Password correct. Download started!");
+                window.location.href = currentTool.download;
+            } else {
+                alert("Incorrect password. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
